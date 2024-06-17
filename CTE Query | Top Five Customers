@@ -1,0 +1,90 @@
+## USING CTE TO REFERENCE ROCKBUSTER'S TOP FIVE CUSTOMERS ##
+
+## This CTE looked at the top 10 countries by number of customers,
+## and took the top 10 cities from those countries by number of customers,
+## and finally took the top five customers from those cities by total amount paid.
+
+
+WITH top_five_customers_cte (customer_id, first_name, last_name, total_amount)
+AS (A.customer_id, A.first_name, A.last_name, SUM(E.amount) AS total_amount
+FROM customer A
+INNER JOIN address B ON A.address_id = B.address_id
+LEFT JOIN city C ON B.city_id = C.city_id
+LEFT JOIN country D ON C.country_id = D.country_id
+INNER JOIN payment E ON A.customer_id = E.customer_id
+WHERE C.city IN (SELECT C.city
+                FROM customer A
+                INNER JOIN address B ON A.address_id = B.address_id
+                LEFT JOIN city C ON B.city_id = C.city_id
+                LEFT JOIN country D ON C.country_id = D.country_id
+                WHERE D.country IN (SELECT D.country
+                                    FROM customer A
+                                    INNER JOIN address B ON A.address_id = B.address_id
+                                    LEFT JOIN city C ON B.city_id = C.city_id
+                                    LEFT JOIN country D ON C.country_id = D.country_id
+                                    GROUP BY D.country
+                                    ORDER BY COUNT(A.customer_id) DESC
+                                    LIMIT 10)
+                GROUP BY D.country
+                         C.city
+                ORDER BY COUNT(A.customer_id) DESC
+                LIMIT 10)
+GROUP BY A.customer_id,
+         D.country,
+         C.city
+ORDER BY total_amount_paid DESC
+LIMIT 5)
+
+
+
+## RUNNING THE QUERY ##
+
+## From here we wanted to get comprehensive information from ony those five customers,
+## including their address, their account creation date, all of the orders they've made, etc.
+
+SELECT DISTICT A.payment_id,
+               B.customer_id,
+               B.first_name,
+               B.last_name,
+               G.country,
+               F.city,
+               E.postal_code,
+               CASE WHEN K.country IN ('Anguilla', 'Canada', 'Dominican Republic', 'Greenland', 'Mexico', 'Puerto Rico',
+                                       'Saint Vicent and the Grenadines', 'United States', 'Virgin Islands, U.S.') 
+                                       THEN 'North America'
+                    WHEN K.country IN ('Argentina', 'Bolivia', 'Brazil', 'Chile', 'Colombia', 'Ecuador', 'French Guiana',
+                                       'Paraguay', 'Peru', 'Venezuela') THEN 'South America'
+                    WHEN K.country IN ('American Samoa', 'French Polynesia', 'Nauru', 'New Zealand', 'Tonga',
+                                       'Tuvalu') THEN 'Oceania'
+                    WHEN K.country IN ('Armenia', 'Austria', 'Belarus', 'Bulgaria', 'Czech Republic', 'Estonia', 'Faroe Islands',          
+                                       'Finland', 'France', 'Germany', 'Greece', 'Holy See (Vatican City State)', 'Hungary',
+                                       'Italy', 'Latvia', 'Liechtenstein', 'Lithuania', 'Moldova', 'Netherlands', 'Poland',
+                                       'Romania', 'Russian Federation', 'Slovakia', Spain', 'Sweden', 'Switzerland', 'Turkey',
+                                       'Ukraine', 'United Kingdom', 'Yugoslavia') THEN 'Europe'
+                    WHEN K.country IN ('Algeria', 'Angola', 'Cameroon', 'Chad', 'Congo, The Democratic Republic of the',
+                                       'Egypt', 'Ethiopia', 'Gambia', 'Kenya', 'Madagascar', Malawi', 'Morocco', 'Mozambique',
+                                       'Nigeria', 'Runion', 'Senegal', 'South Africa', 'Sudan', 'Tanzania', 'Tunisia',
+                                       'Zambia') THEN 'Africa'
+                    ELSE 'Asia'
+                END AS geographic_region,
+                B.store_id,
+                C.first_name AS manager_first_name,
+                C.last_name AS manager_last_name,
+                D.manager_staff_id AS store_manager,
+                B.create_date AS customer_since,
+                A.payment_date,
+                K.name AS genre,
+                A.amount AS amount_paid
+FROM payment A
+INNER JOIN customer B ON A.customer_id = B.customer_id
+INNER JOIN staff C ON A.staff_id = C.staff_id
+INNER JOIN store D ON C.store_id = D.store_id
+INNER JOIN address E ON B.address_id = E.address_id
+INNER JOIN city F ON E.city_id = F.city_id
+INNER JOIN country G ON F.country_id = G.country_id
+INNER JOIN rental H ON A.rental_id = G.rental_id
+INNER JOIN inventory I ON H.inventory_id = I.inventory_id
+INNER JOIN film_category J ON I.film_id = J.film_id
+INNER JOIN category K ON J.category_id = K.category_id
+INNER JOIN top_five_customers_cte L ON A.customer_id = L.customer_id
+ORDER BY payment_id ASC
