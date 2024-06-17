@@ -15,9 +15,9 @@ Rockbuster Stealth LLC is a _fictitious_ movie rental company that used to have 
 
 ## CONTENTS
 1. Query Examples
-     * JOINS -
-     * SUBQEURIES + CASE STATEMENTS - Creating a new dimension, Geographic Region
-     * CTE - Finding Rockbuster's Top Five Customers
+     * JOINS - _Calculating revenue by film_
+     * SUBQEURIES + CASE STATEMENT - _Creating a new dimension, Geographic Region_
+     * CTE - _Finding Rockbuster's Top Five Customers_
 2. Rockbuster Data Dictionary
 3. Rockbuster Presentation
 
