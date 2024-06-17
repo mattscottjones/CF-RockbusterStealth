@@ -1,4 +1,9 @@
 # Rockbuster Stealth LLC
+<p align="center">
+<img width="1465" alt="Screenshot 2024-06-16 at 10 31 26 PM" src="https://github.com/mattscottjones/CF-RockbusterStealth/assets/173007720/bb4be873-3cc6-4f69-bed1-c6f7ff70f6e8">
+</p>
+
+
 <h3 align="center">
   Launch strategy for the new online video rental service for Rockbuster Stealth LLC
 </h3>
