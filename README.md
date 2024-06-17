@@ -30,3 +30,4 @@ Included is a Data Dictionary mapping out the contents of the database and the r
 3. [Where are the customers?](https://public.tableau.com/app/profile/matt.jones8205/viz/RockbusterStealthDashboards3/WherearetheCustomers?publish=yes)
 4. [Conclusion](https://public.tableau.com/app/profile/matt.jones8205/viz/RockbusterStealthDashboards4/Conclusion?publish=yes)
 
+<img width="1355" alt="Screenshot 2024-06-16 at 8 49 27 PM" src="https://github.com/mattscottjones/CF-RockbusterStealth/assets/173007720/1df7ce96-7528-4338-89bf-d801ae543fc2">
