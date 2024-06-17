@@ -1,0 +1,23 @@
+## USING JOINS TO FETCH DATA FROM MULTIPLE TABLES ##
+
+## In addition to seeing film data, we want to calculate how much each film made in revenue,
+## however film data and revenue data are stored in separate tables. So, joins were used to find
+## relationships between the datasets and combine their records.
+
+SELECT A.film_id,
+                   A.title,
+                   A.rating,
+                   F.name AS film_genre,
+                   COUNT(DISTINCT D.payment_id) AS number_of_rentals,
+                   A.rental_rate,
+                   SUM(D.amount) AS total_revenue
+FROM film A
+INNER JOIN inventory B ON A.film_id = B.film_id
+INNER JOIN rental C ON B.inventory_id = C.inventory_id
+INNER JOIN payment D ON C.rental_id = D.rental_id
+LEFT JOIN film_category E ON A.film_id = E.film_id
+LEFT JOIN category F ON E.category_id = F.category_id
+GROUP BY A.film_id,
+                           film_genre
+ORDER BY total_revenue DESC
+LIMIT 10;
