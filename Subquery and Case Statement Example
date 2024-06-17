@@ -1,0 +1,54 @@
+## USING A CASE STATEMENT WITH A SUBQUERY TO CREATE A NEW DIMENSION "GEOGRAPHIC REGION" IN THE DATA ##
+
+## In addition to wanting to know the country of the movie purchase, we want to know what region to
+## attribute that sale. Using the U.S. Department of Homeland Security Regional Group categorization,
+## the subquery creates a new dimension to categorize each country.
+
+
+SELECT DISTINCT A.payment_id,
+                D.title,
+                D.description,
+                F.name AS genre,
+                G.name AS language,
+                D.rating,
+                D.rental_duration,
+                K.country AS country_of_purchase,
+                CASE WHEN K.country IN ('Anguilla', 'Canada', 'Dominican Republic', 'Greenland', 'Mexico', 'Puerto Rico',
+                                        'Saint Vicent and the Grenadines', 'United States', 'Virgin Islands, U.S.') 
+                                         THEN 'North America'
+                     WHEN K.country IN ('Argentina', 'Bolivia', 'Brazil', 'Chile', 'Colombia', 'Ecuador', 'French Guiana',
+                                        'Paraguay', 'Peru', 'Venezuela') THEN 'South America'
+                     WHEN K.country IN ('American Samoa', 'French Polynesia', 'Nauru', 'New Zealand', 'Tonga',
+                                        'Tuvalu') THEN 'Oceania'
+                     WHEN K.country IN ('Armenia', 'Austria', 'Belarus', 'Bulgaria', 'Czech Republic', 'Estonia', 'Faroe Islands',          
+                                        'Finland', 'France', 'Germany', 'Greece', 'Holy See (Vatican City State)', 'Hungary',
+                                        'Italy', 'Latvia', 'Liechtenstein', 'Lithuania', 'Moldova', 'Netherlands', 'Poland',
+                                        'Romania', 'Russian Federation', 'Slovakia', Spain', 'Sweden', 'Switzerland', 'Turkey',
+                                        'Ukraine', 'United Kingdom', 'Yugoslavia') THEN 'Europe'
+                     WHEN K.country IN ('Algeria', 'Angola', 'Cameroon', 'Chad', 'Congo, The Democratic Republic of the',
+                                        'Egypt', 'Ethiopia', 'Gambia', 'Kenya', 'Madagascar', Malawi', 'Morocco', 'Mozambique',
+                                        'Nigeria', 'Runion', 'Senegal', 'South Africa', 'Sudan', 'Tanzania', 'Tunisia',
+                                        'Zambia') THEN 'Africa'
+                     ELSE 'Asia'
+                END AS geographic_region,
+                A.amount AS total_revenue
+FROM payment A
+INNER JOIN rental B ON A.rental_id = B.rental_id
+INNER JOIN inventory C ON B.inventory_id = C.inventory_id
+INNER JOIN film D ON C.film_id = D.film_id
+INNER JOIN film_category E ON C.film_id = E.film_id
+INNER JOIN category F ON E.category_id = F.category_id
+INNER JOIN language G ON D.language_id = G.language_id
+INNER JOIN customer H ON A.customer_id = H.customer_id
+INNER JOIN address I ON H.address_id = I.address_id
+INNER JOIN city J ON I.city_id = J.city_id
+INNER JOIN country K ON J.country_id = K.country_id
+GROUP BY 1,
+         2,
+         3,
+         4,
+         5,
+         6,
+         7,
+         8
+ORDER BY geographic_region ASC;
