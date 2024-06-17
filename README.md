@@ -14,6 +14,12 @@ Rockbuster Stealth LLC is a _fictitious_ movie rental company that used to have 
 5. Do sales figures vary between **geographic regions**?
 
 ## CONTENTS
+1. Query Examples
+     * JOINS -
+     * SUBQEURIES + CASE STATEMENTS - Creating a new dimension, Geographic Region
+     * CTE - Finding Rockbuster's Top Five Customers
+2. Rockbuster Data Dictionary
+3. Rockbuster Presentation
 
 ## DATA
 The Rockbuster Stealth LLC **[data set](http://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip)** contained information about Rockbuster's film inventory, customers, and payments, among other things.
